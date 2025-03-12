@@ -114,13 +114,13 @@ class PresentationGeneratorInput(BaseModel):
     grade_level: str
     n_slides: int
     topic: str
-    objectives: str
-    additional_comments: str
-    objectives_file_url: str
-    objectives_file_type: str
-    additional_comments_file_url: str
-    additional_comments_file_type: str
-    lang: Optional[str] = "en"
+    # objectives: str
+    # additional_comments: str
+    # objectives_file_url: str
+    # objectives_file_type: str
+    # additional_comments_file_url: str
+    # additional_comments_file_type: str
+    # lang: Optional[str] = "en"
 
 class RubricGeneratorArgs(BaseModel):
     grade_level: Literal["pre-k", "kindergarten", "elementary", "middle", "high", "university", "professional"]
