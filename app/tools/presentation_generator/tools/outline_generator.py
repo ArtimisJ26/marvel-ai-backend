@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field
-# from pydantic.v1 import BaseModel, Field
 from app.services.logger import setup_logger
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
@@ -35,7 +34,7 @@ class OutlineGenerator:
         try:
             prompt = PromptTemplate(
                     template=(
-                        "You are a very smart Teaching Assistant for the grade level of {grade_level}. You create presentation outlines for the students on the provided topics. Construct neatly formatted outline of {n_slides} slides to explain the topic {topic} where first slide is the title slide with a short description and last slide is the conclusion slide with a short summary\n{format_instructions}"
+                        "You are a very smart Teaching Assistant for the grade level of {grade_level}. You create presentation outlines for the students on the provided topics. Construct neatly formatted outline of {n_slides} slides each with 3 bullet points covered explaning the topic {topic} where first slide is the title slide with a short description and last slide is the conclusion slide with a short summary\n{format_instructions}"
                     ),
                     input_variables=["grade_level", "n_slides", "topic"],
                     partial_variables={"format_instructions":self.parser.get_format_instructions()},
@@ -60,12 +59,16 @@ def generate_outline(request_args: SlidesOutlineRequestArgs, verbose=True):
     except Exception as e:
         logger.error(f"Failed to generate presentation outline: {e}")
         raise HTTPException(status_code=500, detail="Failed to generate syllabus from LLM.")
+    
+class ContentItem(BaseModel):
+    bullet_pint: str = Field(description="Point to be covered in this slide")
 
 
 class Slide(BaseModel):
     title: str = Field(description="The title of the Slide")
-    content: str = Field(description="The content of the Slide. It must be the exact pullet points or content that will be in the slide, not simple indications")
-
+    # content: str = Field(description="The content of the Slide. It must be the exact pullet points or content that will be in the slide, not simple indications")
+    # content: str = Field(description="3 bullet points on what content should be covered in this particular slide")
+    content: List[ContentItem] = Field(description="3 Bullet points on what content should be covered in this particular slide")
 
 class PresentationOutline(BaseModel):
     main_title: str = Field(description="The main title of the Presentation")
